@@ -2,8 +2,8 @@
   <div class="leftContainer">
     <div id="cityNameBox">
       <div class="cityName">
-        <p>San Fransisco</p>
-        <p>Jan 28</p>
+        <p>{{cityName}}</p>
+        <p>{{currentTime}}</p>
       </div>
     </div>
 
@@ -61,17 +61,47 @@
 </template>
 
 <script>
+import axios from "axios";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+dayjs.locale("ko"); //한국어 사용
+
 export default {
   data() {
     return {
+      //현재 시간을 나타내기 위한 Dayjs 플러그인 사용
+      currentTime:dayjs().format("YYYY.MM.DD.ddd"),
+      //상세 날씨 데이터를 받아주는 데이터 할당
+      temp:[],
+      icons:[],
+      cityName:"",
+
       //임시 데이터
-      TemporaryData: [
+      temporaryData: [
         { title: '습도', value: '88%' },
         { title: '풍속', value: '10m/s' },
-        { title: '습도', value: '88%' },
+        { title: '풍향', value: 'WS' },
       ],
     };
   },
+  created(){
+    const API_KEY ="e1d1521b27cafac575533bcd9d52d117";
+    let initialLat = 35.5683;
+    let initialLon = 126.9778;
+
+    axios
+    .get(`https://api.openweathermap.org/data/2.5/onecall?lat={initialLat}&lon={initialLon}&appid={API_KEY}`)
+    .then(response => {
+      console.log(response);
+      let initialCityName = response.data.timezone;
+      this.cityName = initialCityName.split("/")[1]; // ['asia', 'seoul']
+
+    })
+    .catch(error => {
+      console.log(error);
+    });
+
+  }
 };
 </script>
 
