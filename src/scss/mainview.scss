@@ -1,3 +1,9 @@
+.container{
+    display:flex;
+    align-items: center;
+    height: 100vh;
+    gap:20px;
+}
 .leftContainer {
     width: 324px;
     min-width: 324px;
